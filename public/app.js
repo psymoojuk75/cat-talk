@@ -27,10 +27,15 @@ $("fileInput").addEventListener("change", () => {
 
 socket.on("dataChanged", () => loadMyData());
 
+let updateTimer = null;
+
 socket.on("roomUpdated", roomId => {
   if (currentRoom && Number(currentRoom.id) === Number(roomId)) {
-    loadMyData(true);
-    playNotify();
+    clearTimeout(updateTimer);
+    updateTimer = setTimeout(() => {
+      loadMyData(true);
+      playNotify();
+    }, 300);
   }
 });
 

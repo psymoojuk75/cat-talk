@@ -400,3 +400,16 @@ button {
     font-size: 14px;
   }
 }
+.messages {
+  scroll-behavior: auto;
+}
+
+.bubble,
+.list-item,
+.card {
+  will-change: auto;
+}@media (max-width: 600px) {
+  .bubble img {
+    max-width: 130px;
+  }
+}
