@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>깨톡 Cat Talk 시즌3</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+
+<div class="app">
+  <header>
+    <span>🐱 깨톡 Cat Talk</span>
+    <button id="darkBtn">🌙</button>
+  </header>
+
+  <section id="authScreen" class="screen">
+    <div class="logo">💬🐾</div>
+
+    <div class="card">
+      <h2>닉네임 발급</h2>
+      <input id="issueNickname" placeholder="닉네임 입력" />
+      <button onclick="issueNickname()">닉네임 발급</button>
+      <div id="issuedCodeBox" class="code-box">아직 발급된 코드가 없습니다.</div>
+    </div>
+
+    <div class="card">
+      <h2>입장하기</h2>
+      <input id="loginCode" type="number" placeholder="입장코드 예: 1" />
+      <button class="yellow" onclick="login()">깨톡 입장</button>
+    </div>
+  </section>
+
+  <section id="mainScreen" class="main hidden">
+    <div class="topbar">
+      <b id="userBadge">입장중</b>
+      <button class="red" onclick="logout()">나가기</button>
+    </div>
+
+    <div class="tabs">
+      <button id="tabRooms" class="active" onclick="showTab('rooms')">채팅방</button>
+      <button id="tabInvite" onclick="showTab('invite')">초대</button>
+      <button id="tabApprove" onclick="showTab('approve')">승인</button>
+      <button id="tabPeople" onclick="showTab('people')">사람</button>
+      <button id="tabProfile" onclick="showTab('profile')">프로필</button>
+      <button id="tabRank" onclick="showTab('rank')">랭킹</button>
+    </div>
+
+    <div id="tabContent" class="screen"></div>
+  </section>
+
+  <section id="chatView" class="chat hidden">
+    <div class="chat-header">
+      <button onclick="backToMain()">←</button>
+      <div>
+        <b id="roomTitle">채팅방</b>
+        <div id="typingText" class="typing"></div>
+        <div id="callPopup" class="hidden">
+  <h3 id="callText">📞 전화 오는 중...</h3>
+
+  <<button class="green" onclick="answerVoiceCall()">
+✅ 전화 받기
+</button>
+
+  <button class="red" onclick="rejectVoiceCall()">
+    ❌ 거절
+  </button>
+
+  <button onclick="endVoiceCall()">
+    ☎️ 끊기
+  </button>
+</div>
+      </div>
+      <button onclick="toggleRoomMenu()">⚙</button>
+    </div>
+
+    <div id="roomMenu" class="room-menu hidden">
+      <input id="roomNoticeInput" placeholder="방 공지" />
+      <input id="roomBgmInput" placeholder="BGM 주소 또는 제목" />
+      <input id="roomPasswordInput" placeholder="비밀방 비밀번호" />
+      <button onclick="saveRoomSettings()">방 설정 저장</button>
+      <button onclick="fakeCall()">📞 음성통화</button>
+      <button class="green" onclick="answerVoiceCall()">
+        ✅ 전화 받기</button>
+<button class="red" onclick="endVoiceCall()">☎️ 끊기</button>
+    </div>
+
+    <div id="noticeBar" class="notice hidden"></div>
+    <div id="onlineBar" class="online"></div>
+    <div id="messages" class="messages"></div>
+
+    <div id="emojiShop" class="emoji-shop hidden">
+      <button onclick="insertEmoji('😹')">😹</button>
+      <button onclick="insertEmoji('🐱')">🐱</button>
+      <button onclick="insertEmoji('❤️')">❤️</button>
+      <button onclick="insertEmoji('🔥')">🔥</button>
+      <button onclick="insertEmoji('🍕')">🍕</button>
+      <button onclick="insertEmoji('👑')">👑</button>
+    </div>
+
+    <div class="input-area">
+      <button onclick="toggleEmojiShop()">😹</button>
+      <input id="fileInput" type="file" accept="image/*,audio/*" hidden />
+      <button onclick="document.getElementById('fileInput').click()">🖼</button>
+      <input id="messageInput" placeholder="메시지 입력" />
+      <button onclick="sendMessage()">전송</button>
+    </div>
+  </section>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/app.js"></script>
+</body>
+</html>

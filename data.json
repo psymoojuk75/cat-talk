@@ -1,0 +1,197 @@
+{
+  "users": [
+    {
+      "id": 1778934738673,
+      "code": 1,
+      "nickname": "김민상",
+      "profileEmoji": "🐱",
+      "profileColor": "#f7e600",
+      "status": "안녕하세요. 깨톡입니다.",
+      "createdAt": "2026. 5. 16. PM 9:32:18"
+    },
+    {
+      "id": 1778934791166,
+      "code": 2,
+      "nickname": "재미나",
+      "profileEmoji": "🐱",
+      "profileColor": "#f7e600",
+      "status": "안녕하세요. 깨톡입니다.",
+      "createdAt": "2026. 5. 16. PM 9:33:11"
+    },
+    {
+      "id": 1778934945661,
+      "code": 3,
+      "nickname": "낙낙",
+      "profileEmoji": "🐱",
+      "profileColor": "#f7e600",
+      "status": "안녕하세요. 깨톡입니다.",
+      "createdAt": "2026. 5. 16. PM 9:35:45"
+    },
+    {
+      "id": 1778935061019,
+      "code": 4,
+      "nickname": "거",
+      "profileEmoji": "🐱",
+      "profileColor": "#f7e600",
+      "status": "안녕하세요. 깨톡입니다.",
+      "createdAt": "2026. 5. 16. PM 9:37:41"
+    },
+    {
+      "id": 1778935361103,
+      "code": 5,
+      "nickname": "ㄷ",
+      "profileEmoji": "🐱",
+      "profileColor": "#f7e600",
+      "status": "안녕하세요. 깨톡입니다.",
+      "createdAt": "2026. 5. 16. PM 9:42:41"
+    }
+  ],
+  "invites": [
+    {
+      "id": 1778934796148,
+      "requesterCode": 2,
+      "requesterNickname": "재미나",
+      "members": [
+        {
+          "code": 2,
+          "nickname": "재미나",
+          "approved": true
+        },
+        {
+          "code": 1,
+          "nickname": "김민상",
+          "approved": true
+        }
+      ],
+      "status": "완료",
+      "password": "",
+      "roomId": 1778934803034,
+      "createdAt": "2026. 5. 16. PM 9:33:16"
+    },
+    {
+      "id": 1778934963156,
+      "requesterCode": 3,
+      "requesterNickname": "낙낙",
+      "members": [
+        {
+          "code": 3,
+          "nickname": "낙낙",
+          "approved": true
+        },
+        {
+          "code": 1,
+          "nickname": "김민상",
+          "approved": true
+        }
+      ],
+      "status": "완료",
+      "password": "",
+      "roomId": 1778934968983,
+      "createdAt": "2026. 5. 16. PM 9:36:03"
+    },
+    {
+      "id": 1778935067093,
+      "requesterCode": 4,
+      "requesterNickname": "거",
+      "members": [
+        {
+          "code": 4,
+          "nickname": "거",
+          "approved": true
+        },
+        {
+          "code": 1,
+          "nickname": "김민상",
+          "approved": true
+        }
+      ],
+      "status": "완료",
+      "password": "",
+      "roomId": 1778935076060,
+      "createdAt": "2026. 5. 16. PM 9:37:47"
+    },
+    {
+      "id": 1778935367245,
+      "requesterCode": 5,
+      "requesterNickname": "ㄷ",
+      "members": [
+        {
+          "code": 5,
+          "nickname": "ㄷ",
+          "approved": true
+        },
+        {
+          "code": 1,
+          "nickname": "김민상",
+          "approved": true
+        }
+      ],
+      "status": "완료",
+      "password": "",
+      "roomId": 1778935373062,
+      "createdAt": "2026. 5. 16. PM 9:42:47"
+    }
+  ],
+  "rooms": [
+    {
+      "id": 1778934803034,
+      "title": "재미나, 김민상",
+      "ownerCode": 2,
+      "memberCodes": [
+        2,
+        1
+      ],
+      "kickedCodes": [],
+      "password": "",
+      "notice": "",
+      "bgm": "",
+      "messages": [],
+      "createdAt": "2026. 5. 16. PM 9:33:23"
+    },
+    {
+      "id": 1778934968983,
+      "title": "낙낙, 김민상",
+      "ownerCode": 3,
+      "memberCodes": [
+        3,
+        1
+      ],
+      "kickedCodes": [],
+      "password": "",
+      "notice": "",
+      "bgm": "",
+      "messages": [],
+      "createdAt": "2026. 5. 16. PM 9:36:08"
+    },
+    {
+      "id": 1778935076060,
+      "title": "거, 김민상",
+      "ownerCode": 4,
+      "memberCodes": [
+        4,
+        1
+      ],
+      "kickedCodes": [],
+      "password": "",
+      "notice": "",
+      "bgm": "",
+      "messages": [],
+      "createdAt": "2026. 5. 16. PM 9:37:56"
+    },
+    {
+      "id": 1778935373062,
+      "title": "ㄷ, 김민상",
+      "ownerCode": 5,
+      "memberCodes": [
+        5,
+        1
+      ],
+      "kickedCodes": [],
+      "password": "",
+      "notice": "",
+      "bgm": "",
+      "messages": [],
+      "createdAt": "2026. 5. 16. PM 9:42:53"
+    }
+  ]
+}
