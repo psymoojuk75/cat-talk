@@ -333,3 +333,70 @@ button {
 .dark-mode .time {
   color: #d1d5db;
 }
+@media (max-width: 600px) {
+  body {
+    background: #b2c7d9;
+  }
+
+  .app {
+    width: 100%;
+    max-width: none;
+    height: 100dvh;
+    min-height: 100dvh;
+    box-shadow: none;
+  }
+
+  header {
+    font-size: 18px;
+    padding: 12px;
+  }
+
+  .tabs {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .tabs button {
+    font-size: 11px;
+    padding: 10px 4px;
+  }
+
+  .screen {
+    padding: 10px;
+  }
+
+  .card,
+  .list-item {
+    border-radius: 16px;
+    padding: 13px;
+  }
+
+  .chat-header {
+    padding: 8px;
+  }
+
+  .messages {
+    padding: 10px;
+  }
+
+  .bubble-wrap {
+    max-width: 82%;
+  }
+
+  .bubble img {
+    max-width: 160px;
+  }
+
+  .input-area {
+    padding: 7px;
+    gap: 4px;
+  }
+
+  .input-area button {
+    padding: 9px 8px;
+    font-size: 12px;
+  }
+
+  .input-area input {
+    font-size: 14px;
+  }
+}
