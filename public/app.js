@@ -188,10 +188,39 @@ function renderTab() {
     return;
   }
 
-  if (currentTab === "profile") {
-    renderProfile();
+ function renderProfile() {
+  const box = $("tabContent");
+
+  if (!box) {
+    alert("tabContent가 없음");
     return;
   }
+
+  if (!currentUser) {
+    box.innerHTML = `<div class="list-item">로그인이 필요합니다.</div>`;
+    return;
+  }
+
+  box.innerHTML = `
+    <h2>🎨 프로필 꾸미기</h2>
+
+    <div class="card">
+      <label>닉네임</label>
+      <input id="profileNickname" value="${escapeAttr(currentUser.nickname || "")}" placeholder="닉네임">
+
+      <label>프로필 이모지</label>
+      <input id="profileEmoji" value="${escapeAttr(currentUser.profileEmoji || "🐱")}" placeholder="예: 🐱">
+
+      <label>프로필 색상</label>
+      <input id="profileColor" type="color" value="${escapeAttr(currentUser.profileColor || "#f7e600")}">
+
+      <label>상태메시지</label>
+      <input id="profileStatus" value="${escapeAttr(currentUser.status || "")}" placeholder="상태메시지">
+
+      <button onclick="saveProfile()">저장</button>
+    </div>
+  `;
+}
 
   if (currentTab === "rank") {
     renderRank();
