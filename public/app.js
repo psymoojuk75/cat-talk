@@ -552,14 +552,13 @@ async function saveRoomSettings() {
 let callPeer = null;
 let localCallStream = null;
 let pendingCallOffer = null;
+let currentCallMode = "audio"; // audio 또는 video
 
 const callConfig = {
   iceServers: [
-
     {
       urls: "stun:stun.l.google.com:19302"
     },
-
     {
       urls: [
         "turn:openrelay.metered.ca:80",
@@ -569,11 +568,52 @@ const callConfig = {
       username: "openrelayproject",
       credential: "openrelayproject"
     }
-
   ]
 };
 
-function getRemoteAudio() {
+function getRemoteMedia(mode = "audio") {
+  let box = document.getElementById("callMediaBox");
+
+  if (!box) {
+    box = document.createElement("div");
+    box.id = "callMediaBox";
+    box.style.padding = "8px";
+    box.style.background = "#111";
+    box.style.borderRadius = "14px";
+    box.style.margin = "8px";
+    box.style.color = "white";
+    box.innerHTML = `<b>📞 통화 중</b>`;
+
+    const inputArea = document.querySelector(".input-area");
+    if (inputArea) {
+      inputArea.before(box);
+    } else {
+      document.body.appendChild(box);
+    }
+  }
+
+  box.innerHTML = `<b>${mode === "video" ? "🎥 화상통화 중" : "📞 음성통화 중"}</b>`;
+
+  if (mode === "video") {
+    let video = document.getElementById("remoteCallVideo");
+
+    if (!video) {
+      video = document.createElement("video");
+      video.id = "remoteCallVideo";
+      video.autoplay = true;
+      video.playsInline = true;
+      video.controls = true;
+      video.style.width = "100%";
+      video.style.maxHeight = "260px";
+      video.style.background = "#000";
+      video.style.borderRadius = "12px";
+      video.style.marginTop = "8px";
+      box.appendChild(video);
+    }
+
+    return video;
+  }
+
   let audio = document.getElementById("remoteCallAudio");
 
   if (!audio) {
@@ -581,17 +621,20 @@ function getRemoteAudio() {
     audio.id = "remoteCallAudio";
     audio.autoplay = true;
     audio.controls = true;
-
-    document.body.appendChild(audio);
+    audio.style.width = "100%";
+    audio.style.marginTop = "8px";
+    box.appendChild(audio);
   }
 
   return audio;
 }
 
-async function prepareCall() {
+async function prepareCall(mode = "audio") {
+  currentCallMode = mode;
+
   localCallStream = await navigator.mediaDevices.getUserMedia({
     audio: true,
-    video: false
+    video: mode === "video"
   });
 
   callPeer = new RTCPeerConnection(callConfig);
@@ -601,8 +644,8 @@ async function prepareCall() {
   });
 
   callPeer.ontrack = event => {
-    const audio = getRemoteAudio();
-    audio.srcObject = event.streams[0];
+    const media = getRemoteMedia(currentCallMode);
+    media.srcObject = event.streams[0];
   };
 
   callPeer.onicecandidate = event => {
@@ -621,8 +664,11 @@ async function fakeCall() {
     return;
   }
 
+  const videoOk = confirm("🎥 화상통화로 걸까요?\n확인 = 화상통화\n취소 = 음성통화");
+  const mode = videoOk ? "video" : "audio";
+
   try {
-    await prepareCall();
+    await prepareCall(mode);
 
     const offer = await callPeer.createOffer();
     await callPeer.setLocalDescription(offer);
@@ -630,47 +676,58 @@ async function fakeCall() {
     socket.emit("callOffer", {
       roomId: currentRoom.id,
       offer,
-      from: currentUser.nickname
+      from: currentUser.nickname,
+      mode
     });
 
-    alert("📞 전화 거는 중...");
+    alert(mode === "video" ? "🎥 화상통화 거는 중..." : "📞 음성통화 거는 중...");
   } catch (err) {
     console.log(err);
-    alert("통화 시작 실패");
+    alert("통화 시작 실패. 마이크/카메라 권한을 확인하세요.");
   }
 }
 
 async function answerVoiceCall() {
   if (!pendingCallOffer) return;
 
-  await prepareCall();
+  const mode = pendingCallOffer.mode || "audio";
 
-  await callPeer.setRemoteDescription(
-    new RTCSessionDescription(pendingCallOffer.offer)
-  );
+  try {
+    await prepareCall(mode);
 
-  const answer = await callPeer.createAnswer();
+    await callPeer.setRemoteDescription(
+      new RTCSessionDescription(pendingCallOffer.offer)
+    );
 
-  await callPeer.setLocalDescription(answer);
+    const answer = await callPeer.createAnswer();
+    await callPeer.setLocalDescription(answer);
 
-  socket.emit("callAnswer", {
-    roomId: currentRoom.id,
-    answer,
-    from: currentUser.nickname
-  });
+    socket.emit("callAnswer", {
+      roomId: currentRoom.id,
+      answer,
+      from: currentUser.nickname,
+      mode
+    });
 
-  pendingCallOffer = null;
+    pendingCallOffer = null;
 
-  alert("✅ 통화 연결됨");
+    alert(mode === "video" ? "✅ 화상통화 연결됨" : "✅ 음성통화 연결됨");
+  } catch (err) {
+    console.log(err);
+    alert("통화 받기 실패");
+  }
 }
 
 socket.on("callOffer", data => {
   if (!currentRoom) return;
   if (Number(data.roomId) !== Number(currentRoom.id)) return;
+  if (data.from === currentUser.nickname) return;
 
   pendingCallOffer = data;
 
-  const ok = confirm(`📞 ${data.from}님이 전화 중!\n받을까요?`);
+  const modeText = data.mode === "video" ? "🎥 화상통화" : "📞 음성통화";
+
+  const ok = confirm(`${modeText}\n${data.from}님이 전화 중!\n받을까요?`);
 
   if (ok) {
     answerVoiceCall();
@@ -679,12 +736,13 @@ socket.on("callOffer", data => {
 
 socket.on("callAnswer", async data => {
   if (!callPeer) return;
+  if (data.from === currentUser.nickname) return;
 
   await callPeer.setRemoteDescription(
     new RTCSessionDescription(data.answer)
   );
 
-  alert("🎉 통화 연결 성공!");
+  alert(data.mode === "video" ? "🎉 화상통화 연결 성공!" : "🎉 음성통화 연결 성공!");
 });
 
 socket.on("iceCandidate", async data => {
@@ -699,35 +757,6 @@ socket.on("iceCandidate", async data => {
   }
 });
 
-function toggleEmojiShop() {
-  $("emojiShop").classList.toggle("hidden");
-}
-
-function insertEmoji(emoji) {
-  $("messageInput").value += emoji;
-  $("messageInput").focus();
-}
-
-function escapeHtml(text) {
-  return String(text ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
-}
-
-function escapeAttr(text) {
-  return escapeHtml(text).replaceAll('"', "&quot;");
-}
-
-function restoreLogin() {
-  const saved = localStorage.getItem("catTalkUser");
-  if (saved) {
-    currentUser = JSON.parse(saved);
-    openMain();
-  }
-}
-
-restoreLogin();
 function endVoiceCall() {
   if (callPeer) {
     callPeer.close();
@@ -739,11 +768,8 @@ function endVoiceCall() {
     localCallStream = null;
   }
 
-  const audio = document.getElementById("remoteCallAudio");
-  if (audio) {
-    audio.srcObject = null;
-    audio.remove();
-  }
+  const box = document.getElementById("callMediaBox");
+  if (box) box.remove();
 
   alert("☎️ 통화를 종료했습니다.");
 }
