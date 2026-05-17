@@ -144,24 +144,59 @@ async function loadMyData(keepRoom = false) {
 
 function showTab(tab) {
   currentTab = tab;
-  ["Rooms", "Invite", "Approve", "People", "Profile", "Rank"].forEach(name => {
-    const el = $("tab" + name);
+
+  const tabs = {
+    rooms: "tabRooms",
+    invite: "tabInvite",
+    approve: "tabApprove",
+    people: "tabPeople",
+    profile: "tabProfile",
+    rank: "tabRank"
+  };
+
+  Object.values(tabs).forEach(id => {
+    const el = document.getElementById(id);
     if (el) el.classList.remove("active");
   });
 
-  const id = "tab" + tab.charAt(0).toUpperCase() + tab.slice(1);
-  if ($(id)) $(id).classList.add("active");
+  const active = document.getElementById(tabs[tab]);
+  if (active) active.classList.add("active");
+
   renderTab();
 }
 
 function renderTab() {
   if (!currentData) return;
-  if (currentTab === "rooms") renderRooms();
-  if (currentTab === "invite") renderInvite();
-  if (currentTab === "approve") renderApprove();
-  if (currentTab === "people") renderPeople();
-  if (currentTab === "profile") renderProfile();
-  if (currentTab === "rank") renderRank();
+
+  if (currentTab === "rooms") {
+    renderRooms();
+    return;
+  }
+
+  if (currentTab === "invite") {
+    renderInvite();
+    return;
+  }
+
+  if (currentTab === "approve") {
+    renderApprove();
+    return;
+  }
+
+  if (currentTab === "people") {
+    renderPeople();
+    return;
+  }
+
+  if (currentTab === "profile") {
+    renderProfile();
+    return;
+  }
+
+  if (currentTab === "rank") {
+    renderRank();
+    return;
+  }
 }
 
 function renderRooms() {
