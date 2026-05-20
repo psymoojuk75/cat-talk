@@ -1,4 +1,8 @@
+const fs = require("fs");
+const path = require("path");
 const express = require("express");
+const fs = require("fs");
+const path = require("path");
 const fs = require("fs");
 const path = require("path");
 const http = require("http");
@@ -12,6 +16,25 @@ const io = new Server(server);
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, "data.json");
 const UPLOAD_DIR = path.join(__dirname, "uploads");
+const DATA_FILE = path.join(__dirname, "data.json");
+
+function quickSave() {
+  try {
+    fs.writeFileSync(
+      DATA_FILE,
+      JSON.stringify({
+        onlineUsers,
+        rooms,
+        invites,
+        messages
+      }, null, 2)
+    );
+
+    console.log("💾 data.json 저장 완료");
+  } catch (err) {
+    console.log("❌ 저장 실패", err);
+  }
+}
 
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR);
@@ -674,3 +697,30 @@ server.listen(PORT, () => {
   console.log(`깨톡 시즌4 서버 실행: http://localhost:${PORT}`);
   console.log("--------------------------------");
 });
+const DATA_FILE = path.join(__dirname, "data.json");
+
+let db = {
+  users: [],
+  rooms: [],
+  invites: [],
+  messages: []
+};
+
+if (fs.existsSync(DATA_FILE)) {
+  try {
+    db = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
+    console.log("✅ data.json 불러오기 성공");
+  } catch (err) {
+    console.log("❌ data.json 읽기 실패", err);
+  }
+}
+
+function saveDB() {
+  fs.writeFileSync(
+    DATA_FILE,
+    JSON.stringify(db, null, 2)
+  );
+}
+setInterval(() => {
+  quickSave();
+}, 5000);
