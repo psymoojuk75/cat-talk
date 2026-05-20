@@ -12,6 +12,29 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+const DATA_FILE = path.join(__dirname, "data.json");
+
+function quickSave() {
+  try {
+
+    const safeData = {
+      users: typeof onlineUsers !== "undefined" ? onlineUsers : [],
+      rooms: typeof rooms !== "undefined" ? rooms : [],
+      invites: typeof invites !== "undefined" ? invites : [],
+      messages: typeof messages !== "undefined" ? messages : []
+    };
+
+    fs.writeFileSync(
+      DATA_FILE,
+      JSON.stringify(safeData, null, 2)
+    );
+
+    console.log("💾 data.json 저장 완료");
+
+  } catch (err) {
+    console.log("❌ 저장 실패", err);
+  }
+}
 
 const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, "data.json");
