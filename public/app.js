@@ -71,7 +71,9 @@ async function issueNickname() {
     $("issuedCodeBox").innerHTML =
       `🎉 닉네임: ${escapeHtml(result.user.nickname)}<br>🔑 입장코드: ${result.user.code}`;
     $("loginCode").value = result.user.code;
-    alert(`코드 발급 완료: ${result.user.code}`);
+  alert(
+  `🎉 가입 완료!\n\n닉네임: ${result.user.nickname}\n🔑 입장코드: ${result.user.code}\n\n⚠️ 꼭 기억하세요!`
+);
   } else {
     alert(result.message || "발급 실패");
   }
@@ -145,7 +147,12 @@ async function loadMyData(keepRoom = false) {
 function showTab(tab) {
   currentTab = tab;
 
-  const tabs = {
+  ["tabRooms", "tabInvite", "tabApprove", "tabPeople", "tabProfile", "tabRank"].forEach(id => {
+    const el = $(id);
+    if (el) el.classList.remove("active");
+  });
+
+  const map = {
     rooms: "tabRooms",
     invite: "tabInvite",
     approve: "tabApprove",
@@ -154,13 +161,9 @@ function showTab(tab) {
     rank: "tabRank"
   };
 
-  Object.values(tabs).forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.classList.remove("active");
-  });
-
-  const active = document.getElementById(tabs[tab]);
-  if (active) active.classList.add("active");
+  if ($(map[tab])) {
+    $(map[tab]).classList.add("active");
+  }
 
   renderTab();
 }
@@ -168,64 +171,12 @@ function showTab(tab) {
 function renderTab() {
   if (!currentData) return;
 
-  if (currentTab === "rooms") {
-    renderRooms();
-    return;
-  }
-
-  if (currentTab === "invite") {
-    renderInvite();
-    return;
-  }
-
-  if (currentTab === "approve") {
-    renderApprove();
-    return;
-  }
-
-  if (currentTab === "people") {
-    renderPeople();
-    return;
-  }
-
- function renderProfile() {
-  const box = $("tabContent");
-
-  if (!box) {
-    alert("tabContent가 없음");
-    return;
-  }
-
-  if (!currentUser) {
-    box.innerHTML = `<div class="list-item">로그인이 필요합니다.</div>`;
-    return;
-  }
-
-  box.innerHTML = `
-    <h2>🎨 프로필 꾸미기</h2>
-
-    <div class="card">
-      <label>닉네임</label>
-      <input id="profileNickname" value="${escapeAttr(currentUser.nickname || "")}" placeholder="닉네임">
-
-      <label>프로필 이모지</label>
-      <input id="profileEmoji" value="${escapeAttr(currentUser.profileEmoji || "🐱")}" placeholder="예: 🐱">
-
-      <label>프로필 색상</label>
-      <input id="profileColor" type="color" value="${escapeAttr(currentUser.profileColor || "#f7e600")}">
-
-      <label>상태메시지</label>
-      <input id="profileStatus" value="${escapeAttr(currentUser.status || "")}" placeholder="상태메시지">
-
-      <button onclick="saveProfile()">저장</button>
-    </div>
-  `;
-}
-
-  if (currentTab === "rank") {
-    renderRank();
-    return;
-  }
+  if (currentTab === "rooms") return renderRooms();
+  if (currentTab === "invite") return renderInvite();
+  if (currentTab === "approve") return renderApprove();
+  if (currentTab === "people") return renderPeople();
+  if (currentTab === "profile") return renderProfile();
+  if (currentTab === "rank") return renderRank();
 }
 
 function renderRooms() {
@@ -374,14 +325,52 @@ async function quickInvite(code) {
 }
 
 function renderProfile() {
-  $("tabContent").innerHTML = `
-    <h2>🎨 프로필 꾸미기</h2>
-    <div class="card">
-      <input id="profileNickname" value="${escapeAttr(currentUser.nickname)}" placeholder="닉네임">
-      <input id="profileEmoji" value="${escapeAttr(currentUser.profileEmoji || "🐱")}" placeholder="프로필 이모지">
-      <input id="profileColor" value="${escapeAttr(currentUser.profileColor || "#f7e600")}" placeholder="프로필 색상">
-      <input id="profileStatus" value="${escapeAttr(currentUser.status || "")}" placeholder="상태메시지">
-      <button onclick="saveProfile()">저장</button>
+
+  const tab = document.getElementById("tabContent");
+
+  if (!tab) return;
+
+  tab.innerHTML = `
+    <div class="profile-page">
+
+      <h2>🎨 프로필</h2>
+
+      <div class="card">
+
+        <label>닉네임</label>
+        <input
+          id="profileNickname"
+          value="${currentUser?.nickname || ""}"
+        >
+
+        <label>상태메시지</label>
+        <input
+          id="profileStatus"
+          value="${currentUser?.status || ""}"
+          placeholder="상태메시지"
+        >
+
+        <label>프로필 이모지</label>
+        <input
+          id="profileEmoji"
+          value="${currentUser?.profileEmoji || "🐱"}"
+        >
+
+        <label>프로필 색상</label>
+        <input
+          type="color"
+          id="profileColor"
+          value="${currentUser?.profileColor || "#f7e600"}"
+        >
+
+        <br><br>
+
+        <button onclick="saveProfile()">
+          💾 저장
+        </button>
+
+      </div>
+
     </div>
   `;
 }
@@ -411,7 +400,7 @@ async function saveProfile() {
 
 function renderRank() {
   const box = $("tabContent");
-  box.innerHTML = `<h2>🏆 인기방 랭킹</h2>`;
+  box.innerHTML = `<h2>🏆 인기쵀툉ㅇ 랭킹</h2>`;
 
   (currentData.ranking || []).forEach((room, i) => {
     box.innerHTML += `
