@@ -154,6 +154,14 @@ app.post("/api/issue-nickname", (req, res) => {
     });
   }
 
+  const cleanNickname =
+  nickname.trim().toLowerCase();
+
+const exists = data.users.find(user =>
+  user.nickname &&
+  user.nickname.trim().toLowerCase() === cleanNickname
+);
+
   const exists = data.users.find(user => user.nickname === nickname);
 
   if (exists) {
