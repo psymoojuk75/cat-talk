@@ -335,6 +335,11 @@ function renderProfile() {
 
       <h2>🎨 프로필</h2>
 
+      <p>
+  🔑 내 입장코드:
+  <b>${currentUser?.code || "-"}</b>
+</p>
+
       <div class="card">
 
         <label>닉네임</label>
