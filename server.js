@@ -137,35 +137,6 @@ app.get("/api/data", (req, res) => {
   res.json(readData());
 });
 
-if (result.ok) {
-  $("issuedCodeBox").innerHTML =
-    `🎉 닉네임: ${escapeHtml(result.user.nickname)}<br>🔑 입장코드: ${result.user.code}`;
-
-  $("loginCode").value = result.user.code;
-
-  alert(
-    `🎉 가입 완료!\n\n닉네임: ${result.user.nickname}\n🔑 입장코드: ${result.user.code}\n\n이 번호로 다른 기기에서도 로그인할 수 있어요.`
-  );
-} else {
-  alert(result.message || "발급 실패");
-}
-
-app.post("/api/login", (req, res) => {
-  const data = readData();
-  const user = findUser(data, req.body.code);
-
-  if (!user) {
-    return res.status(403).json({
-      ok: false,
-      message: "입장코드가 틀렸습니다."
-    });
-  }
-
-  res.json({
-    ok: true,
-    user
-  });
-});
 
 app.post("/api/profile", (req, res) => {
   const data = readData();
