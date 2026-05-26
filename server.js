@@ -137,56 +137,18 @@ app.get("/api/data", (req, res) => {
   res.json(readData());
 });
 
-app.post("/api/issue-nickname", (req, res) => {
-  const data = readData();
-  const nickname = String(req.body.nickname || "").trim();
+if (result.ok) {
+  $("issuedCodeBox").innerHTML =
+    `🎉 닉네임: ${escapeHtml(result.user.nickname)}<br>🔑 입장코드: ${result.user.code}`;
 
-  if (!nickname) {
-    return res.status(400).json({
-      ok: false,
-      message: "닉네임을 입력하세요."
-    });
-  }
+  $("loginCode").value = result.user.code;
 
-  const cleanNickname =
-  nickname.trim().toLowerCase();
-
-  const exists = data.users.find(user =>
-  user.nickname &&
-  user.nickname.trim().toLowerCase() === nickname.trim().toLowerCase()
-);
-
-  if (exists) {
-    return res.status(409).json({
-      ok: false,
-      message: "이미 있는 닉네임입니다."
-    });
-  }
-
-  const code = data.users.length
-    ? Math.max(...data.users.map(user => Number(user.code))) + 1
-    : 1;
-
-  const user = {
-    id: Date.now(),
-    code,
-    nickname,
-    profileEmoji: "🐱",
-    profileColor: "#f7e600",
-    status: "안녕하세요. 깨톡입니다.",
-    createdAt: new Date().toLocaleString("ko-KR")
-  };
-
-  data.users.push(user);
-  writeData(data);
-
-  io.emit("dataChanged");
-
-  res.json({
-    ok: true,
-    user
-  });
-});
+  alert(
+    `🎉 가입 완료!\n\n닉네임: ${result.user.nickname}\n🔑 입장코드: ${result.user.code}\n\n이 번호로 다른 기기에서도 로그인할 수 있어요.`
+  );
+} else {
+  alert(result.message || "발급 실패");
+}
 
 app.post("/api/login", (req, res) => {
   const data = readData();
