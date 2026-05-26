@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const express = require("express");
-const path = require("path");
 const http = require("http");
 const multer = require("multer");
 const { Server } = require("socket.io");
@@ -159,7 +158,10 @@ const exists = data.users.find(user =>
   user.nickname.trim().toLowerCase() === cleanNickname
 );
 
-  const exists = data.users.find(user => user.nickname === nickname);
+  const exists = data.users.find(user =>
+  user.nickname &&
+  user.nickname.trim().toLowerCase() === nickname.trim().toLowerCase()
+);
 
   if (exists) {
     return res.status(409).json({
