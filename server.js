@@ -8,7 +8,6 @@ const { Server } = require("socket.io");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
-const DATA_FILE = path.join(__dirname, "data.json");
 
 function quickSave() {
   try {
@@ -33,7 +32,6 @@ function quickSave() {
 }
 
 const PORT = process.env.PORT || 3000;
-const DATA_FILE = path.join(__dirname, "data.json");
 const UPLOAD_DIR = path.join(__dirname, "uploads");
 const DATA_FILE = path.join(__dirname, "data.json");
 
@@ -727,7 +725,6 @@ server.listen(PORT, () => {
   console.log(`깨톡 시즌4 서버 실행: http://localhost:${PORT}`);
   console.log("--------------------------------");
 });
-const DATA_FILE = path.join(__dirname, "data.json");
 
 let db = {
   users: [],
